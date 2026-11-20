@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NightGrid: Smart City Traffic Control</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Manrope:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <section class="hero">
+    <i class="streak head" style="--top:14%;--w:120px;--dur:3.2s;--delay:-1s"></i>
+    <i class="streak tail" style="--top:26%;--w:160px;--dur:4.1s;--delay:-2s"></i>
+    <i class="streak head" style="--top:38%;--w:90px;--dur:2.8s;--delay:-3s"></i>
+    <i class="streak tail" style="--top:50%;--w:200px;--dur:5s;--delay:-1.5s"></i>
+    <i class="streak head" style="--top:62%;--w:140px;--dur:3.7s;--delay:-0.5s"></i>
+    <i class="streak tail" style="--top:74%;--w:110px;--dur:4.6s;--delay:-2.5s"></i>
+    <h1>The city, moving as one.</h1>
+    <p>NightGrid models every junction and road as a graph. A Python backend runs Dijkstra, A*, BFS, Kruskal and Prim while the map reacts live. Close a road, trigger rush hour, or send an ambulance.</p>
+    <a class="cta" href="#room">Open the control room</a>
+  </section>
+
+  <main class="room" id="room">
+    <aside class="card">
+      <h2>Route planner</h2>
+      <label for="alg">Algorithm</label>
+      <select id="alg">
+        <optgroup label="Shortest path"><option value="dij">Dijkstra</option><option value="astar">A* search</option><option value="bf">Bellman-Ford</option></optgroup>
+        <optgroup label="Traversal"><option value="bfs">BFS (fewest roads)</option><option value="dfs">DFS</option></optgroup>
+        <optgroup label="Infrastructure"><option value="kru">Kruskal MST</option><option value="prim">Prim MST</option></optgroup>
+      </select>
+      <label for="from">From</label><select id="from"></select>
+      <label for="to">To</label><select id="to"></select>
+      <label for="mode">Road cost</label>
+      <select id="mode"><option value="time">Travel time</option><option value="dist">Distance only</option></select>
+      <button class="primary" id="run">Run algorithm</button>
+      <button class="warn" id="ambulance">Dispatch ambulance to Hospital</button>
+      <button id="live">Live city: on</button>
+      <button id="rush">Rush hour</button>
+      <button id="random">Random traffic</button>
+      <button id="reset">Clear everything</button>
+      <p class="note">Click two junctions to set the trip. Click a road to close or reopen it.</p>
+    </aside>
+
+    <section class="card map-card">
+      <canvas id="map" role="img" aria-label="Animated city road network"></canvas>
+      <div class="legend">
+        <span><i style="background:var(--ok)"></i>Free flow</span>
+        <span><i style="background:var(--mid)"></i>Busy</span>
+        <span><i style="background:var(--tail)"></i>Congested</span>
+        <span><i style="background:var(--cyan)"></i>Your route</span>
+        <span><i style="background:var(--violet)"></i>MST road</span>
+      </div>
+      <div id="path"></div>
+    </section>
+
+    <aside class="side">
+      <div class="card">
+        <div class="ring-row">
+          <div class="ring" id="ring"><b id="health">80</b></div>
+          <div><h2>Network health</h2><span class="note">Falls with congestion and closed roads.</span></div>
+        </div>
+        <div class="kpis">
+          <div><b id="k-trip">–</b><span id="k-trip-label">Trip time</span></div>
+          <div><b id="k-delay">–</b><span>Delay vs free flow</span></div>
+          <div><b id="k-explored">–</b><span>Junctions explored</span></div>
+          <div><b id="k-closed">0</b><span>Roads closed</span></div>
+        </div>
+      </div>
+      <div class="card"><h2>City events</h2><ul id="feed"></ul></div>
+    </aside>
+  </main>
+
+  <section class="wide">
+    <div class="card"><h2>Algorithm comparison</h2><p class="note">Same trip and traffic, averaged over 200 runs in Python.</p><div class="scroll"><table id="compare"></table></div></div>
+    <div class="card"><h2>Scalability test</h2><p class="note">Random grid cities, corner to corner. Milliseconds per run.</p><button id="bench">Run benchmark</button><div class="scroll"><table id="benchmark"></table></div></div>
+  </section>
+
+  <script type="module" src="/static/js/main.js"></script>
+</body>
+</html>
